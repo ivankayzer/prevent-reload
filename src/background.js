@@ -1,10 +1,17 @@
 var preventReload = false;
 
-chrome.browserAction.onClicked.addListener(function(tab) {
+chrome.runtime.onMessage.addListener(function(message, data) {
+    if (message.type == 'enable') {
+      chrome.pageAction.show(data.tab.id);
+    }
+ });
+
+chrome.pageAction.onClicked.addListener(function(tab) {
   preventReload = !preventReload;
 
-  chrome.browserAction.setIcon({
-    path : preventReload ? "icons/reload-on.png" : "icons/reload-off.png"
+  chrome.pageAction.setIcon({
+    path : preventReload ? "icons/reload-on.png" : "icons/reload-off.png",
+    tabId: tab.id
   })
 
   chrome.tabs.executeScript(tab.id, {
